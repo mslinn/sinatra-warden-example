@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
 
+# Need comment
 class User
   include DataMapper::Resource
 
@@ -9,16 +12,11 @@ class User
   property :password, BCryptHash
 
   def authenticate(attempted_password)
-    # The BCrypt class, which `self.password` is an instance of, has `==` defined to compare a
+    # The BCrypt class, which `password` is an instance of, has `==` defined to compare a
     # test plain text string to the encrypted string and converts `attempted_password` to a BCrypt
     # for the comparison.
-    #
-    # But don't take my word for it, check out the source: https://github.com/codahale/bcrypt-ruby/blob/master/lib/bcrypt/password.rb#L64-L67
-    if self.password == attempted_password
-      true
-    else
-      false
-    end
+    # See https://github.com/codahale/bcrypt-ruby/blob/master/lib/bcrypt/password.rb#L64-L67
+    password == attempted_password
   end
 end
 
@@ -29,8 +27,8 @@ DataMapper.finalize
 DataMapper.auto_upgrade!
 
 # Create a test User
-if User.count == 0
-  @user = User.create(username: "admin")
-  @user.password = "admin"
+if User.count.zero?
+  @user = User.create(username: 'admin')
+  @user.password = 'admin'
   @user.save
 end
