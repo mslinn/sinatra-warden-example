@@ -246,7 +246,7 @@ There are two ways to run this app.
 When you've ran `bundle install` you'll get a program named 'rackup' which will run the app on port 9292 by default. You need to run "rackup" with the config.ru file, as such:
 
 ~~~bash
-$ rackup config.ru
+$ rackup
 # [2014-05-18 12:11:27] INFO  WEBrick 1.3.1
 # [2014-05-18 12:11:27] INFO  ruby 2.0.0 (2014-02-24) [x86_64-darwin13.1.0]
 # [2014-05-18 12:11:27] INFO  WEBrick::HTTPServer#start: pid=72027 port=9292

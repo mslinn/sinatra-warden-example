@@ -26,9 +26,12 @@ end
 
 # Need a comment
 class SinatraWardenExample < Sinatra::Base
+  disable :show_errors
+  disable :show_exceptions
+
   enable :sessions
   register Sinatra::Flash
-  set :session_secret, 'supersecret'
+  # set :session_secret, SecureRandom.hex(32) # Unnecessary?
 
   use Warden::Manager do |config|
     # Tell Warden how to save our User info into a session.

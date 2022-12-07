@@ -4,9 +4,9 @@ gem 'bcrypt'
 gem 'sinatra'
 gem 'sinatra-flash'
 
-gem 'puma'
 gem 'shotgun'
 gem 'warden'
+gem 'webrick'
 
 gem 'dm-core'
 gem 'dm-migrations'

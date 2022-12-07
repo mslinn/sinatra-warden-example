@@ -46,10 +46,7 @@ GEM
     multi_json (1.15.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
-    nio4r (2.5.8)
     public_suffix (5.0.0)
-    puma (6.0.0)
-      nio4r (~> 2.0)
     rack (2.2.4)
     rack-protection (3.0.4)
       rack
@@ -68,6 +65,7 @@ GEM
     uuidtools (2.2.0)
     warden (1.2.9)
       rack (>= 2.0.9)
+    webrick (1.7.0)
 
 PLATFORMS
   x86_64-linux
@@ -82,11 +80,11 @@ DEPENDENCIES
   dm-transactions
   dm-types
   dm-validations
-  puma
   shotgun
   sinatra
   sinatra-flash
   warden
+  webrick
 
 BUNDLED WITH
    2.3.18
