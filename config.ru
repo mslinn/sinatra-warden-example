@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
-require './app'
+require_relative 'app/app.rb'
 
 run SinatraWardenExample

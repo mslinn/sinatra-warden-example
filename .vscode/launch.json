@@ -7,8 +7,8 @@
     {
       "args": [],
       "cwd": "${workspaceRoot}",
-      "name": "Debug app.rb",
-      "program": "${workspaceRoot}/app.rb",
+      "name": "Debug config.ru",
+      "program": "${workspaceRoot}/config.ru",
       "request": "launch",
       "type": "Ruby",
     }

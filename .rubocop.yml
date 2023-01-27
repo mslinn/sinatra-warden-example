@@ -1,0 +1,27 @@
+AllCops:
+  Exclude:
+      - vendor/**/*
+      - exe/**/*
+      - Gemfile*
+      - Rakefile
+      - '*.gemspec'
+  NewCops: enable
+  TargetRubyVersion: 2.6
+
+Layout/HashAlignment:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 150
+
+Metrics/MethodLength:
+  Max: 30
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10

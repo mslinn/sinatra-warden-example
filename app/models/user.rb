@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
 
 # Need comment

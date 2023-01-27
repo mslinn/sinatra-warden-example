@@ -1,10 +1,9 @@
-# frozen_string_literal: true
-
 require 'bundler'
 Bundler.require
 
-# load the Database and User model
-require './model'
+$LOAD_PATH.unshift File.dirname(__FILE__)
+# load the User model
+require 'models/user.rb'
 
 Warden::Strategies.add(:password) do
   def valid?
@@ -24,7 +23,7 @@ Warden::Strategies.add(:password) do
   end
 end
 
-# Need a comment
+# Needs a comment
 class SinatraWardenExample < Sinatra::Base
   disable :show_errors
   disable :show_exceptions
