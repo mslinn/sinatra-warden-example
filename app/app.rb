@@ -30,7 +30,6 @@ class SinatraWardenExample < Sinatra::Base
 
   enable :sessions
   register Sinatra::Flash
-  # set :session_secret, SecureRandom.hex(32) # Unnecessary?
 
   use Warden::Manager do |config|
     # Tell Warden how to save our User info into a session.
