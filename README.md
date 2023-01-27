@@ -1,33 +1,29 @@
 # Sinatra Warden Example
 
-_This readme is copied from the original blog post [on my site](http://sklise.com/2013/03/08/sinatra-warden-auth/)._
+_UPDATE 5/18/2014, Switched from Rack::Flash to Sinatra/Flash and added instructions for launching the webapp._
 
-_UPDATE 5/18/2014, Switched from Rack::Flash to Sinatra/Flash and added instructions for launching the app._
-
-In this article I'll explain the basics of authentication and Rack middleware
-and in the process build a complete app with [Sinatra](http://sinatrarb.com),
+This article explains the basics of authentication and Rack middleware,
+and in the process, build a complete webapp with [Sinatra](http://sinatrarb.com),
 [DataMapper](http://datamapper.org) and [Warden](http://github.com/hassox/warden).
 
 ## Audience
 
 This article is intended for people familiar with Sinatra and DataMapper who want multiple user authentication.
 
-If you've never built a website with Sinatra I'd recommend Peepcode's excellent [Meet Sinatra](https://peepcode.com/products/sinatra) screencast, it is definitely worth the twelve dollars.
-
 ## Storing Passwords
 
-Passwords should never be stored in plain text. If someone were to get access to your database they'd have all of the passwords. _You'd_ have everyone's passwords. We need to encrypt the passwords. DataMapper supports a BCryptHash property type which is great because [bcrypt](http://en.wikipedia.org/wiki/Bcrypt) is pretty dang [secure](http://codahale.com/how-to-safely-store-a-password/).
+Passwords should never be stored in plain text. If someone were to get access to your database, they'd have all the passwords. _You'd_ have everyone's passwords. We need to encrypt the passwords. DataMapper supports a BCryptHash property type, which is great because [bcrypt](http://en.wikipedia.org/wiki/Bcrypt) is pretty dang [secure](http://codahale.com/how-to-safely-store-a-password/).
 
-Let's get started on a `User` model. For the rest of this section we will be building a file named `model.rb` in stages. The first step is to install the gems we need:
+Let's get started on a `User` model. For the rest of this section, we will be building a file named `model.rb` in stages. The first step is to install the gems we need:
 
     $ gem install data_mapper
     $ gem install dm-sqlite-adapter
 
-When installing the `data_mapper` gem `bcrypt-ruby` is installed as a dependency.
+When installing the `data_mapper`, `bcrypt-ruby` gem is installed as a dependency.
 
 *Note: you may need to run the above gem commands with `sudo` if you are not using [rvm](http://rvm.io).*
 
-Open up (or create) a file named model.rb and require the gems and set up DataMapper:
+Open up (or create) a file named `model.rb`, `require` the gems, and set up DataMapper:
 
 ###### /model.rb
 ~~~ruby
@@ -39,7 +35,7 @@ require 'bcrypt'
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
 ~~~
 
-Now let's create a User model. In addition to including `DataMapper::Resource` we will include the `BCrypt` class (the gem is named 'bcrypt-ruby', it is required as 'bcrypt' and the class is named `BCrypt`).
+Now let's create a `User` model. In addition to including `DataMapper::Resource`, we will include the `BCrypt` class. It is provided by a gem called `bcrypt-ruby`, however it is `require`d as `bcrypt` and the class is named `BCrypt`.
 
 ###### /model.rb (cont.)
 ~~~ruby
@@ -81,19 +77,19 @@ Excellent. We have a User model that stores passwords in an encrypted way.
 
 Warden is an excellent gem for authentication with Sinatra. I've found that the documentation for Warden is lacking which is why I'm writing this. If you want to know the why of Warden [read this](https://github.com/hassox/warden/wiki/overview).
 
-You may have seen that there is a gem called [sinatra_warden](https://github.com/jsmestad/sinatra_warden). Why am I not using that? The sinatra_warden gem chooses the routes for logging in and logging out for you and that logic is buried in the gem. I like for all of the routes in my Sinatra apps to be visible at a glance and not squirreled away.
+You may have seen that there is a gem called [sinatra_warden](https://github.com/jsmestad/sinatra_warden). Why am I not using that? The `sinatra_warden` gem chooses the routes for logging in and logging out for you, and that logic is buried in the gem. I like for all the routes in my Sinatra apps to be visible at a glance and not squirreled away.
 
 But ok, on to Warden.
 
-After struggling a lot with figuring out how to set up Warden I found [this post](http://mikeebert.tumblr.com/post/27097231613/wiring-up-warden-sinatra) by [Mike Ebert](https://twitter.com/mikeebert) extremely helpful.
+After struggling a lot with figuring out how to set up Warden, I found [this post](http://mikeebert.tumblr.com/post/27097231613/wiring-up-warden-sinatra) by [Mike Ebert](https://twitter.com/mikeebert) extremely helpful.
 
 Warden is middleware for [Rack](http://rack.github.com/). Sinatra runs on Rack. Rack is an adapter to let Sinatra run on many different web servers. Warden lives between Rack and Sinatra.
 
-I use `bundler` with Sinatra, [this](https://github.com/sklise/sinatra-warden-example/blob/master/Gemfile) is the Gemfile for this example app. Before You'll need to create that Gemfile in your directory and run the following in Terminal:
+I use `bundler` with Sinatra, which provides the `bundle` command. This project's [Gemfile](https://github.com/sklise/sinatra-warden-example/blob/master/Gemfile) specifies that the project will be built into a gem. Run the following command:
 
     $ bundle install
 
-We're using `sinatra-flash` to show alerts on pages, the first chunk of code will load our gems and create a new Sinatra app and register session support and the flash messages:
+We're using `sinatra-flash` to show alerts on pages, the first chunk of code will load our gems and create a new Sinatra webapp and register session support and the flash messages:
 
 ###### /app.rb
 ~~~ruby
@@ -110,7 +106,7 @@ class SinatraWardenExample < Sinatra::Base
 #...
 ~~~
 
-Now in the Warden setup. Most of the lines need to be explained so I'll mark up the code with comments. This block tells Warden how to set up, using some code specific to this example, if your user model is named User and has a key of `id` this block should be the same for you, otherwise, replace where you see User with your model's class name.
+Now in the Warden setup. Most of the lines need to be explained, so I'll mark up the code with comments. This block tells Warden how to set up, using some code specific to this example, if your user model is named `User` and has a key of `id`, this block should be the same for you, otherwise, replace where you see `User` with your model's class name.
 
 ###### /app.rb (cont)
 ~~~ruby
@@ -148,7 +144,7 @@ Now in the Warden setup. Most of the lines need to be explained so I'll mark up 
   end
 ~~~
 
-The last part of setting up Warden is to write the code for the `:password` strategy we called above. In the following block, they keys of `params` which I am using are based on the login form I made.
+The last part of setting up Warden is to write the code for the `:password` strategy we called above. In the following block, the keys of `params` which I am using are based on the login form I made.
 
 ###### /app.rb (cont)
 ~~~ruby
@@ -171,7 +167,7 @@ The last part of setting up Warden is to write the code for the `:password` stra
   end
 ~~~
 
-Hold on a minute. I called an `authenticate` method on `user`. We need to create such a method in our User class that accepts an attempted password. Back in model.rb we'll add the following:
+Hold on a minute. I called an `authenticate` method on `user`. We need to create such a method in our `User` class that accepts an attempted password. Back in `model.rb` we'll add the following:
 
 ###### /model.rb (reopened)
 ~~~ruby
@@ -235,15 +231,17 @@ Time to define a few routes to handle logging in, logging out and a protected pa
 end
 ~~~
 
-## Starting The App
+## Starting The Webapp
 
-As @Celandir has pointed out, this app uses the [Sinatra modular-style](http://www.sinatrarb.com/intro.html#Modular%20vs.%20Classic%20Style) app. To run a modular app we use a file named `config.ru` (the "ru" stands for rackup).
+As `@Celandir` has pointed out, this webapp uses the [Sinatra modular-style](http://www.sinatrarb.com/intro.html#Modular%20vs.%20Classic%20Style) app. To run a modular app, we use a file named `config.ru` (the `ru` stands for rackup).
 
-There are two ways to run this app.
+This webapp predefines userid `admin` with password `admin`.
 
-### rackup
+There are two ways to run this webapp.
 
-When you've ran `bundle install` you'll get a program named 'rackup' which will run the app on port 9292 by default. You need to run "rackup" with the config.ru file, as such:
+### Rackup
+
+When you've run `bundle install` you'll get a program named `rackup` which will run the webapp on port 9292 by default. You need to run `rackup` with the `config.ru` file, like this:
 
 ~~~bash
 $ rackup
@@ -252,11 +250,11 @@ $ rackup
 # [2014-05-18 12:11:27] INFO  WEBrick::HTTPServer#start: pid=72027 port=9292
 ~~~
 
-With that running in Terminal visit http://localhost:9292 to see the app.
+With that running in a terminal, visit http://localhost:9292 to see the webapp.
 
-### shotgun
+### Shotgun
 
-There is a ruby gem called **shotgun** which is very useful in development because it will pick up changes to your ruby files. So you won't need to stop and restart the server every time you change a file. To use shotgun with our config.ru file, you need to tell shotgun which file to use, like so:
+There is a ruby gem called `shotgun` which is very useful in development because it will pick up changes to your Ruby files. This means you won't need to stop and restart the server every time you modify a source file. To use `shotgun` with our `config.ru` file, you need to tell `shotgun` which configuration file to use, like this:
 
 ~~~bash
 $ shotgun config.ru
@@ -266,13 +264,13 @@ $ shotgun config.ru
 # >> Listening on 127.0.0.1:9393, CTRL+C to stop
 ~~~
 
-Shotgun runs apps on a different port than rackup, if you are using shotgun visit the app at http://localhost:9393.
+`Shotgun` runs webapps on a different port than `rackup`, so if you are using `shotgun`, visit the app at http://localhost:9393.
 
-#### shotgun and flash messages
+#### Shotgun and flash messages
 
-The flash plugin makes use of sessions to store messages across routes. The sessions are stored with a "secret" generated each time the server starts. `shotgun` works by restarting the server at every request, which means your flash messages will be lost.
+The flash plugin makes use of sessions to store messages across routes. The sessions are stored with a "secret" generated each time the server starts. `Shotgun` works by restarting the server at every request, which means your flash messages will be lost.
 
-To enable flash messages with `shotgun`, you must specifically set `:session_secret` using the following:
+To enable flash messages with `shotgun`, you must set `:session_secret` using the following:
 
 ~~~ruby
 class SinatraWardenExample < Sinatra::Base
@@ -282,7 +280,7 @@ class SinatraWardenExample < Sinatra::Base
 #...
 ~~~
 
-Always be careful with storing secret keys in your source code. In fact, it's advisable to not do so, and instead use an `ENV` variable as such:
+Always be careful with storing secret keys in your source code. In fact, it's advisable to not do so, and instead use an `ENV` variable like this:
 
 ~~~ruby
 set :session_secret, ENV['SESSION_SECRET']

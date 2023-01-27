@@ -56,11 +56,11 @@ class SinatraWardenExample < Sinatra::Base
   end
 
   Warden::Manager.before_failure do |env, _opts|
-    # Because authentication failure can happen on any request but
+    # Because authentication failure can happen on any request, but
     # we handle it only under "post '/auth/unauthenticated'", we need
-    # to change request to POST
+    # to change the request method to POST
     env['REQUEST_METHOD'] = 'POST'
-    # And we need to do the following to work with  Rack::MethodOverride
+    # ...and we need to do the following to work with Rack::MethodOverride
     env.each do |key, _value|
       env[key]['_method'] = 'post' if key == 'rack.request.form_hash'
     end
