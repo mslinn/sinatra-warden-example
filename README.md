@@ -10,13 +10,12 @@ This article is intended for people familiar with Sinatra and DataMapper who wan
 ## Storing Passwords
 Passwords should never be stored in plain text.
 If someone were to get access to your database, they'd have all the passwords.
-_You'd_ have everyone's passwords.
 We need to encrypt the passwords.
 DataMapper supports a BCryptHash property type, which is great because
-[bcrypt](http://en.wikipedia.org/wiki/Bcrypt) is pretty dang
+[`bcrypt`](http://en.wikipedia.org/wiki/Bcrypt) is pretty dang
 [secure](http://codahale.com/how-to-safely-store-a-password/).
 
-If you'd like to see another take on using bcrypt,
+If you'd like to see another take on using `bcrypt`,
 Github user **namelessjon** has a more complex example with some discussion
 [here](https://gist.github.com/namelessjon/1039058).
 
@@ -31,9 +30,9 @@ The first step is to install the gems we need:
 
 When installing `data_mapper`, the `bcrypt-ruby` gem is installed as a dependency.
 
-*Note: you may need to run the above gem commands with `sudo` if you are not using [rvm](http://rvm.io).*
+Note: you may need to run the above gem commands with `sudo` if you are not using [virtualized Ruby instances](https://www.mslinn.com/jekyll/500-ruby-setup.html).
 
-Open up (or create) a file named `model.rb`, `require` the gems, and set up DataMapper:
+Open up (or create) a file named `model.rb`, `require` the gems, and set up `DataMapper`:
 
 
 ###### /model.rb
@@ -84,44 +83,43 @@ Let's test this code.
     # => "$2a$10$lKgran7g.1rSYY0M6d0V9.uLInljHgYmrr68LAj86rllmApBSqu0S"
     > exit
 
-Excellent. We have a `User` model that stores passwords in an encrypted way.
+Excellent, we have a `User` model that stores encrypted passwords.
 
 
 ## Warden, a Library for Authentication and User Sessions
-Warden is middleware for [Rack](http://rack.github.com/).
+Warden is [Rack](http://rack.github.com/) middleware.
 Sinatra runs on Rack.
 Warden lives between Rack and Sinatra.
-[This is an overview.](https://github.com/hassox/warden/wiki/overview).
+Read an [overview of Warden](https://github.com/hassox/warden/wiki/overview).
 
 Warden is an excellent gem for authentication with Sinatra,
 however the Warden documentation is lacking, which is why I'm writing this.
 
-[**Wiring up Warden & Sinatra**](http://mikeebert.tumblr.com/post/27097231613/wiring-up-warden-sinatra)
-by [Mike Ebert](https://twitter.com/mikeebert) is extremely helpful.
+Another resource is [Wiring up Warden & Sinatra](http://mikeebert.tumblr.com/post/27097231613/wiring-up-warden-sinatra),
+by [Mike Ebert](https://twitter.com/mikeebert).
 
 You may have seen that there is a gem called
 [sinatra_warden](https://github.com/jsmestad/sinatra_warden).
-Why am I not using that?
-The `sinatra_warden` gem chooses the routes for logging in and logging out for you,
+Why am I not using it?
+That gem dictates the routes for logging in and logging out,
 and that logic is buried in the gem.
-I like for all the routes in my Sinatra apps to be visible at a glance and not squirreled away.
+Instead, I prefer all the routes in my Sinatra apps to be visible at a glance, and not squirreled away.
 
 
 ## Installing Dependencies
-I use `bundler` with Sinatra, which provides the `bundle` command.
-This project's [Gemfile](https://github.com/sklise/sinatra-warden-example/blob/master/Gemfile)
-specifies this project's dependencies.
+I use `bundler` to build Sinatra.
+It provides the `bundle` command.
+This project's [Gemfile](Gemfile)
+specifies its dependencies.
 Pull them in with the following command:
 
     $ bundle install
-
-We're using `sinatra-flash` to show alerts on pages.
 
 
 ## Modular Sinatra Webapp
 The following loads the dependencies,
 creates a new modular Sinatra webapp called `SinatraWardenExample`,
-enables session support and
+enables [session support](https://stackoverflow.com/a/5693760/553865) and
 [Sinatra flash messages](https://rubygems.org/gems/sinatra-flash/):
 
 ###### /app.rb
