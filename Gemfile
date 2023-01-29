@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'bcrypt'
 gem 'sinatra'
+gem 'sinatra-advanced-routes', :require => 'sinatra/advanced_routes'
 gem 'sinatra-flash'
 
 gem 'shotgun'

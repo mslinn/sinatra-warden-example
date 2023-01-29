@@ -10,6 +10,7 @@ Warden::Strategies.add(:password) do
     params['user'] && params['user']['username'] && params['user']['password']
   end
 
+  # See https://github.com/wardencommunity/warden/wiki/Overview#failing-authentication
   def authenticate!
     user = User.first(username: params['user']['username'])
 
@@ -18,13 +19,15 @@ Warden::Strategies.add(:password) do
     elsif user.authenticate(params['user']['password'])
       success!(user)
     else
-      throw(:warden, message: "The username and password combination ")
+      throw(:warden, message: "Invalid username and password combination.")
     end
   end
 end
 
 # Needs a comment
 class SinatraWardenExample < Sinatra::Base
+  register Sinatra::AdvancedRoutes
+
   disable :show_errors
   disable :show_exceptions
 

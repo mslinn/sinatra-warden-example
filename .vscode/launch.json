@@ -5,12 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "args": [],
       "cwd": "${workspaceRoot}",
-      "name": "Debug config.ru",
-      "program": "${workspaceRoot}/config.ru",
+      "name": "Run SinatraWardenExample",
+      "program": "${workspaceRoot}/app/app.rb",
       "request": "launch",
       "type": "Ruby",
-    }
+    },
+    {
+      "cwd": "${workspaceRoot}",
+      "name": "SinatraWardenExample Routes",
+      "program": "${workspaceRoot}/app/show_routes.rb",
+      "request": "launch",
+      "type": "Ruby",
+    },
   ]
 }
