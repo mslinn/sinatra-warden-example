@@ -1,29 +1,40 @@
 # Sinatra Warden Example
-
-_UPDATE 5/18/2014, Switched from Rack::Flash to Sinatra/Flash and added instructions for launching the webapp._
-
 This article explains the basics of authentication and Rack middleware,
-and in the process, build a complete webapp with [Sinatra](http://sinatrarb.com),
+and in the process, builds a complete webapp with [Sinatra](http://sinatrarb.com),
 [DataMapper](http://datamapper.org) and [Warden](http://github.com/hassox/warden).
 
-## Audience
 
+## Audience
 This article is intended for people familiar with Sinatra and DataMapper who want multiple user authentication.
 
 ## Storing Passwords
+Passwords should never be stored in plain text.
+If someone were to get access to your database, they'd have all the passwords.
+_You'd_ have everyone's passwords.
+We need to encrypt the passwords.
+DataMapper supports a BCryptHash property type, which is great because
+[bcrypt](http://en.wikipedia.org/wiki/Bcrypt) is pretty dang
+[secure](http://codahale.com/how-to-safely-store-a-password/).
 
-Passwords should never be stored in plain text. If someone were to get access to your database, they'd have all the passwords. _You'd_ have everyone's passwords. We need to encrypt the passwords. DataMapper supports a BCryptHash property type, which is great because [bcrypt](http://en.wikipedia.org/wiki/Bcrypt) is pretty dang [secure](http://codahale.com/how-to-safely-store-a-password/).
+If you'd like to see another take on using bcrypt,
+Github user **namelessjon** has a more complex example with some discussion
+[here](https://gist.github.com/namelessjon/1039058).
 
-Let's get started on a `User` model. For the rest of this section, we will be building a file named `model.rb` in stages. The first step is to install the gems we need:
+
+## User Model
+Let's get started on a `User` model.
+For the rest of this section, we will be building a file named `model.rb` in stages.
+The first step is to install the gems we need:
 
     $ gem install data_mapper
     $ gem install dm-sqlite-adapter
 
-When installing the `data_mapper`, `bcrypt-ruby` gem is installed as a dependency.
+When installing `data_mapper`, the `bcrypt-ruby` gem is installed as a dependency.
 
 *Note: you may need to run the above gem commands with `sudo` if you are not using [rvm](http://rvm.io).*
 
 Open up (or create) a file named `model.rb`, `require` the gems, and set up DataMapper:
+
 
 ###### /model.rb
 ~~~ruby
@@ -35,7 +46,11 @@ require 'bcrypt'
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
 ~~~
 
-Now let's create a `User` model. In addition to including `DataMapper::Resource`, we will include the `BCrypt` class. It is provided by a gem called `bcrypt-ruby`, however it is `require`d as `bcrypt` and the class is named `BCrypt`.
+Now let's create a `User` model.
+In addition to including `DataMapper::Resource`, we will include the `BCrypt` class.
+It is provided by a gem called `bcrypt-ruby`,
+however it is `require`d as `bcrypt` and the class is named `BCrypt`.
+
 
 ###### /model.rb (cont.)
 ~~~ruby
@@ -69,27 +84,45 @@ Let's test this code.
     # => "$2a$10$lKgran7g.1rSYY0M6d0V9.uLInljHgYmrr68LAj86rllmApBSqu0S"
     > exit
 
-Excellent. We have a User model that stores passwords in an encrypted way.
+Excellent. We have a `User` model that stores passwords in an encrypted way.
 
-*If you'd like to see another take on using bcrypt, Github user **namelessjon** has a more complex example with some discussion [here](https://gist.github.com/namelessjon/1039058).*
 
 ## Warden, a Library for Authentication and User Sessions
+Warden is middleware for [Rack](http://rack.github.com/).
+Sinatra runs on Rack.
+Warden lives between Rack and Sinatra.
+[This is an overview.](https://github.com/hassox/warden/wiki/overview).
 
-Warden is an excellent gem for authentication with Sinatra. I've found that the documentation for Warden is lacking which is why I'm writing this. If you want to know the why of Warden [read this](https://github.com/hassox/warden/wiki/overview).
+Warden is an excellent gem for authentication with Sinatra,
+however the Warden documentation is lacking, which is why I'm writing this.
 
-You may have seen that there is a gem called [sinatra_warden](https://github.com/jsmestad/sinatra_warden). Why am I not using that? The `sinatra_warden` gem chooses the routes for logging in and logging out for you, and that logic is buried in the gem. I like for all the routes in my Sinatra apps to be visible at a glance and not squirreled away.
+[**Wiring up Warden & Sinatra**](http://mikeebert.tumblr.com/post/27097231613/wiring-up-warden-sinatra)
+by [Mike Ebert](https://twitter.com/mikeebert) is extremely helpful.
 
-But ok, on to Warden.
+You may have seen that there is a gem called
+[sinatra_warden](https://github.com/jsmestad/sinatra_warden).
+Why am I not using that?
+The `sinatra_warden` gem chooses the routes for logging in and logging out for you,
+and that logic is buried in the gem.
+I like for all the routes in my Sinatra apps to be visible at a glance and not squirreled away.
 
-After struggling a lot with figuring out how to set up Warden, I found [this post](http://mikeebert.tumblr.com/post/27097231613/wiring-up-warden-sinatra) by [Mike Ebert](https://twitter.com/mikeebert) extremely helpful.
 
-Warden is middleware for [Rack](http://rack.github.com/). Sinatra runs on Rack. Rack is an adapter to let Sinatra run on many different web servers. Warden lives between Rack and Sinatra.
-
-I use `bundler` with Sinatra, which provides the `bundle` command. This project's [Gemfile](https://github.com/sklise/sinatra-warden-example/blob/master/Gemfile) specifies that the project will be built into a gem. Run the following command:
+## Installing Dependencies
+I use `bundler` with Sinatra, which provides the `bundle` command.
+This project's [Gemfile](https://github.com/sklise/sinatra-warden-example/blob/master/Gemfile)
+specifies this project's dependencies.
+Pull them in with the following command:
 
     $ bundle install
 
-We're using `sinatra-flash` to show alerts on pages, the first chunk of code will load our gems and create a new Sinatra webapp and register session support and the flash messages:
+We're using `sinatra-flash` to show alerts on pages.
+
+
+## Modular Sinatra Webapp
+The following loads the dependencies,
+creates a new modular Sinatra webapp called `SinatraWardenExample`,
+enables session support and
+[Sinatra flash messages](https://rubygems.org/gems/sinatra-flash/):
 
 ###### /app.rb
 ~~~ruby
@@ -106,7 +139,8 @@ class SinatraWardenExample < Sinatra::Base
 #...
 ~~~
 
-Now in the Warden setup. Most of the lines need to be explained, so I'll mark up the code with comments. This block tells Warden how to set up, using some code specific to this example, if your user model is named `User` and has a key of `id`, this block should be the same for you, otherwise, replace where you see `User` with your model's class name.
+## Warden Setup
+Most of the lines need to be explained, so I'll mark up the code with comments. This block tells Warden how to set up, using some code specific to this example, if your user model is named `User` and has a key of `id`, this block should be the same for you, otherwise, replace where you see `User` with your model's class name.
 
 ###### /app.rb (cont)
 ~~~ruby
@@ -144,7 +178,11 @@ Now in the Warden setup. Most of the lines need to be explained, so I'll mark up
   end
 ~~~
 
-The last part of setting up Warden is to write the code for the `:password` strategy we called above. In the following block, the keys of `params` which I am using are based on the login form I made.
+### Authentication Strategy
+The last part of setting up Warden is to write the code for the `:password` authentication strategy we invoked above.
+In the following block,
+the keys of `params` which I am using are based on the login form I made.
+
 
 ###### /app.rb (cont)
 ~~~ruby
@@ -167,7 +205,10 @@ The last part of setting up Warden is to write the code for the `:password` stra
   end
 ~~~
 
-Hold on a minute. I called an `authenticate` method on `user`. We need to create such a method in our `User` class that accepts an attempted password. Back in `model.rb` we'll add the following:
+Hold on a minute.
+I called an `authenticate` method on `user`.
+We need to create such a method in our `User` class that accepts an attempted password.
+Back in `model.rb` we'll add the following:
 
 ###### /model.rb (reopened)
 ~~~ruby
@@ -175,16 +216,12 @@ class User
   #...
 
   def authenticate(attempted_password)
-    if self.password == attempted_password
-      true
-    else
-      false
-    end
+    self.password == attempted_password
   end
 end
 ~~~
 
-Time to define a few routes to handle logging in, logging out and a protected page.
+Define routes to handle login, logout and a protected page.
 
 ###### /app.rb (cont)
 ~~~ruby
@@ -232,16 +269,19 @@ end
 ~~~
 
 ## Starting The Webapp
-
-As `@Celandir` has pointed out, this webapp uses the [Sinatra modular-style](http://www.sinatrarb.com/intro.html#Modular%20vs.%20Classic%20Style) app. To run a modular app, we use a file named `config.ru` (the `ru` stands for rackup).
+This webapp is an example of the
+[Sinatra modular-style](http://www.sinatrarb.com/intro.html#Modular%20vs.%20Classic%20Style) app.
+To run a modular app, we use a file named `config.ru` (the `ru` stands for rackup).
 
 This webapp predefines userid `admin` with password `admin`.
 
 There are two ways to run this webapp.
 
+
 ### Rackup
 
-When you've run `bundle install` you'll get a program named `rackup` which will run the webapp on port 9292 by default. You need to run `rackup` with the `config.ru` file, like this:
+Running `bundle install` installs the `rackup` command, which runs the webapp on port 9292 by default.
+By default, `rackup` uses the `config.ru` file, like this:
 
 ~~~bash
 $ rackup
@@ -252,9 +292,11 @@ $ rackup
 
 With that running in a terminal, visit http://localhost:9292 to see the webapp.
 
-### Shotgun
 
-There is a ruby gem called `shotgun` which is very useful in development because it will pick up changes to your Ruby files. This means you won't need to stop and restart the server every time you modify a source file. To use `shotgun` with our `config.ru` file, you need to tell `shotgun` which configuration file to use, like this:
+### Shotgun
+There is a ruby gem called `shotgun` which is very useful in development because it will pick up changes to your Ruby files.
+This means you won't need to stop and restart the server every time you modify a source file.
+To use `shotgun` with our `config.ru` file, you need to tell `shotgun` which configuration file to use, like this:
 
 ~~~bash
 $ shotgun config.ru
@@ -266,11 +308,14 @@ $ shotgun config.ru
 
 `Shotgun` runs webapps on a different port than `rackup`, so if you are using `shotgun`, visit the app at http://localhost:9393.
 
-#### Shotgun and flash messages
 
-The flash plugin makes use of sessions to store messages across routes. The sessions are stored with a "secret" generated each time the server starts. `Shotgun` works by restarting the server at every request, which means your flash messages will be lost.
+#### Shotgun and Flash Messages
+The flash plugin makes use of sessions to store messages across routes.
+The sessions are stored with a "secret" that generates each time the server starts.
+`Shotgun` works by restarting the server at every request,
+which means the flash messages will be lost.
 
-To enable flash messages with `shotgun`, you must set `:session_secret` using the following:
+To enable flash messages with `shotgun`, set `:session_secret` using the following:
 
 ~~~ruby
 class SinatraWardenExample < Sinatra::Base
@@ -280,10 +325,9 @@ class SinatraWardenExample < Sinatra::Base
 #...
 ~~~
 
-Always be careful with storing secret keys in your source code. In fact, it's advisable to not do so, and instead use an `ENV` variable like this:
+Do not store secret keys in your source code.
+Instead, use an environment variable, like this:
 
 ~~~ruby
 set :session_secret, ENV['SESSION_SECRET']
 ~~~
-
-I figured this out by reading [this very helpful StackOverflow answer](http://stackoverflow.com/questions/5631862/sinatra-and-session-variables-which-are-not-being-set).
