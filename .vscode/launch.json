@@ -6,8 +6,33 @@
   "configurations": [
     {
       "cwd": "${workspaceRoot}",
+      "name": "Listen for rdebug-ide",
+      "request": "attach",
+      "remoteHost": "localhost",
+      "remotePort": "1234",
+      "remoteWorkspaceRoot": "/",
+      "showDebuggerOutput": true,
+      "type": "Ruby",
+    },
+    {
+      "args": [
+          "-p", "9292",
+          "-E", "development"
+      ],
+      "cwd": "${workspaceRoot}",
+      "name": "Debug rackup application",
+      "pathToBundler": "${userHome}/.rbenv/shims/bundle",
+      "pathToRDebugIDE": "${userHome}/.rbenv/shims/rdebug-ide",
+      "program": "${workspaceRoot}/bin/rackup",
+      "request": "launch",
+      "showDebuggerOutput": true,
+      "type": "Ruby",
+      "useBundler": true,
+    },
+    {
+      "cwd": "${workspaceRoot}",
       "name": "Run SinatraWardenExample",
-      "program": "${workspaceRoot}/app/app.rb",
+      "program": "${userHome}/.rbenv/shims/rackup",
       "request": "launch",
       "type": "Ruby",
     },

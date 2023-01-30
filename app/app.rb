@@ -5,24 +5,35 @@ require 'warden'
 $LOAD_PATH.unshift File.dirname(__FILE__)
 require 'models/user'
 
+# Authentication strategy
 Warden::Strategies.add(:password) do
+  # The valid? method sets the conditions to run the authentication strategy.
+  # If the conditions are fulfilled, then the strategy is run whenever warden.authenticate! is called.
+  # This method declares that if both email and password parameters are provided in a request,
+  # this authentication strategy is run.
   def valid?
     user = params['user']
     user && user['username'] && user['password']
   end
 
+  # This method actually authenticating a request.
+  # Calling success! and passing the authenticated object will treat the object as authenticated
+  # and serialize it into the session.
+  # The fail method halts the chain and returns the specified message.
   # See https://github.com/wardencommunity/warden/wiki/Overview#failing-authentication
   def authenticate!
     user = params['user']
-    user_found = User.first(username: user['username'])
+    return fail 'No user id provided' if user['username'].empty?
 
-    if user_found.nil?
-      throw(:warden, message: 'The username you entered does not exist.')
-    elsif user_found.authenticate(user['password'])
-      success!(user_found)
-    else
-      throw(:warden, message: 'Invalid username and password combination.')
-    end
+    return fail 'No password provided' if user['password'].empty?
+
+    authenticated_user = User.first(username: user['username'])
+
+    return fail 'The username you entered does not exist.' if authenticated_user.nil?
+
+    return success!(authenticated_user) if authenticated_user.authenticate(user['password'])
+
+    fail 'Invalid username and password combination.'
   end
 end
 
@@ -36,16 +47,16 @@ class SinatraWardenExample < Sinatra::Base
 
   use Warden::Manager do |config|
     # Tell Warden how to save our User info into a session.
-    # Sessions can only take strings, not Ruby code, we'll store the User's `id`
+    # Session values are strings; store the value of `User.id`.
     config.serialize_into_session(&:id)
-    # Now tell Warden how to take what we've stored in the session
-    # and get a User from that information.
+
+    # Tell Warden how to get a `User` from a session.
     config.serialize_from_session { |id| User.get(id) }
 
-    # `strategies`` is an array of named methods with which to attempt authentication.
+    # `strategies` is an array of named methods with which to attempt authentication.
     # We have to define this later.
     # `action` is a route to send the user to when `warden.authenticate!`` returns false.
-    # This route is defined below.
+    # This route is defined here.
     config.scope_defaults(
       :default,
       strategies: [:password],
@@ -71,6 +82,7 @@ class SinatraWardenExample < Sinatra::Base
   end
 
   get '/auth/login' do
+    @user = env['warden']
     erb :login
   end
 

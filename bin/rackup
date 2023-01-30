@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+# Prepares the $LOAD_PATH by adding to it lib directories of all gems in the
+# project's bundle:
+require 'bundler/setup'
+
+load Gem.bin_path('rack', 'rackup')
