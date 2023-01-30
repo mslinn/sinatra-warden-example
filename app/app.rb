@@ -3,7 +3,7 @@ require 'sinatra/flash'
 require 'warden'
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
-require 'models/user.rb'
+require 'models/user'
 
 Warden::Strategies.add(:password) do
   def valid?
@@ -17,15 +17,16 @@ Warden::Strategies.add(:password) do
     user_found = User.first(username: user['username'])
 
     if user_found.nil?
-      throw(:warden, message: "The username you entered does not exist.")
+      throw(:warden, message: 'The username you entered does not exist.')
     elsif user_found.authenticate(user['password'])
       success!(user_found)
     else
-      throw(:warden, message: "Invalid username and password combination.")
+      throw(:warden, message: 'Invalid username and password combination.')
     end
   end
 end
 
+# Modular Sinatra webapp
 class SinatraWardenExample < Sinatra::Base
   disable :show_errors
   disable :show_exceptions
@@ -101,7 +102,6 @@ class SinatraWardenExample < Sinatra::Base
 
   get '/protected' do
     env['warden'].authenticate!
-
     erb :protected
   end
 end

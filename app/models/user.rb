@@ -5,6 +5,7 @@ require 'dm-sqlite-adapter'
 # See https://code.tutsplus.com/tutorials/ruby-for-newbies-working-with-datamapper--net-19622
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
 
+# User model
 class User
   include DataMapper::Resource
   include BCrypt
