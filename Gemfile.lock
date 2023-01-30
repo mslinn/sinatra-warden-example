@@ -92,14 +92,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt
   data_mapper
-  dm-core
-  dm-migrations
-  dm-serializer
   dm-sqlite-adapter
-  dm-timestamps
-  dm-transactions
-  dm-types
-  dm-validations
   shotgun
   sinatra (>= 3.0.5)
   sinatra-flash
