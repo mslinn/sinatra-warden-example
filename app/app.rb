@@ -7,17 +7,19 @@ require 'models/user.rb'
 
 Warden::Strategies.add(:password) do
   def valid?
-    params['user'] && params['user']['username'] && params['user']['password']
+    user = params['user']
+    user && user['username'] && user['password']
   end
 
   # See https://github.com/wardencommunity/warden/wiki/Overview#failing-authentication
   def authenticate!
-    user = User.first(username: params['user']['username'])
+    @user = params['user']
+    user_found = User.first(username: @user['username'])
 
-    if user.nil?
+    if user_found.nil?
       throw(:warden, message: "The username you entered does not exist.")
-    elsif user.authenticate(params['user']['password'])
-      success!(user)
+    elsif user_found.authenticate(@user['password'])
+      success!(user_found)
     else
       throw(:warden, message: "Invalid username and password combination.")
     end
