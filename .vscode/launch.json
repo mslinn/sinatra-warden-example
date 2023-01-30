@@ -11,12 +11,5 @@
       "request": "launch",
       "type": "Ruby",
     },
-    {
-      "cwd": "${workspaceRoot}",
-      "name": "SinatraWardenExample Routes",
-      "program": "${workspaceRoot}/app/show_routes.rb",
-      "request": "launch",
-      "type": "Ruby",
-    },
   ]
 }
