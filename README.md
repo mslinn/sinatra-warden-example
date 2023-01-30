@@ -247,7 +247,7 @@ Define routes to handle login, logout and a protected page.
 
   get '/auth/logout' do
     # env['warden'] = Warden::Proxy:3380 @config={:default_scope=>:default, :scope_defaults=>{:default=>{:action=>"auth/unauthenticated"}}, :default_strategies=>{:default=>[:password]}, :intercept_401=>true, :failure_app=>SinatraWardenExample}
-    env['warden'].logout # Logout everyone and clear the session
+    env['warden'].logout # Logout and clear the session
     flash[:success] = 'Successfully logged out'
     redirect '/'
   end
@@ -262,7 +262,6 @@ Define routes to handle login, logout and a protected page.
 
   get '/protected' do
     env['warden'].authenticate!
-
     erb :protected
   end
 end
