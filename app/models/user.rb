@@ -1,8 +1,18 @@
+require 'bcrypt'
+require 'data_mapper'
+require 'dm-core'
+# require 'dm-migration'
+require 'dm-sqlite-adapter'
+require 'dm-timestamps'
+require 'dm-validations'
+
+# See https://code.tutsplus.com/tutorials/ruby-for-newbies-working-with-datamapper--net-19622
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
 
 # Need comment
 class User
   include DataMapper::Resource
+  include BCrypt
 
   property :id, Serial, key: true
   property :username, String, length: 128

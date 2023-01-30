@@ -1,8 +1,9 @@
-require 'bundler'
-Bundler.require
+require 'sinatra/base'
+require 'sinatra/flash'
+# require 'sinatra/advanced_routes'
+require 'warden'
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
-# load the User model
 require 'models/user.rb'
 
 Warden::Strategies.add(:password) do
@@ -24,9 +25,9 @@ Warden::Strategies.add(:password) do
   end
 end
 
-# Needs a comment
 class SinatraWardenExample < Sinatra::Base
-  register Sinatra::AdvancedRoutes
+  # See https://github.com/rkh/sinatra-advanced-routes
+  #register Sinatra::AdvancedRoutes
 
   disable :show_errors
   disable :show_exceptions
