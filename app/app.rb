@@ -70,13 +70,6 @@ class SinatraWardenExample < Sinatra::Base
     config.failure_app = self
   end
 
-  Warden::Manager.before_failure do |env, _opts|
-    # Because authentication failure can happen on any request, but
-    # we handle it only under "post '/auth/unauthenticated'", we need
-    # to change the request method to POST
-    env['REQUEST_METHOD'] = 'POST'
-  end
-
   get '/' do
     erb :index
   end
@@ -104,13 +97,17 @@ class SinatraWardenExample < Sinatra::Base
     redirect '/'
   end
 
-  post '/auth/unauthenticated' do
+  # Handler for get and post methods with action '/auth/unauthenticated'
+  unathentication = lambda do
     session[:return_to] ||= env['warden.options'][:attempted_path]
 
     # Set the error and use a fallback if the message is not defined
-    flash[:error] = env['warden.options'][:message] || 'You must log in'
+    flash[:error] = env['warden.options'][:message] || 'You must log in.'
     redirect '/auth/login'
   end
+
+  get  '/auth/unauthenticated', &unathentication
+  post '/auth/unauthenticated', &unathentication
 
   get '/protected' do
     env['warden'].authenticate!
