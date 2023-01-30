@@ -86,6 +86,9 @@ class SinatraWardenExample < Sinatra::Base
   end
 
   get '/auth/logout' do
+    x = env['warden']
+    y = env['warden'].raw_session
+    z = env['warden'].raw_session.inspect
     env['warden'].raw_session.inspect
     env['warden'].logout
     flash[:success] = 'Successful logout'

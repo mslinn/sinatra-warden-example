@@ -40,14 +40,14 @@ Open up (or create) a file named `model.rb`, `require` the gems, and set up `Dat
 
 ###### /model.rb
 ~~~ruby
+require 'bcrypt'
 require 'data_mapper'
 require 'dm-sqlite-adapter'
-require 'bcrypt'
 
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
 ~~~
 
-Now let's create a `User` model.
+Now lets create a `User` model.
 In addition to including `DataMapper::Resource`, we will include the `BCrypt` class.
 It is provided by a gem called `bcrypt-ruby`,
 however it is `require`d as `bcrypt` and the class is named `BCrypt`.
@@ -71,7 +71,7 @@ DataMapper.auto_upgrade!
 # end of model.rb
 ~~~
 
-Let's test this code.
+Lets test this code.
 
     $ irb
     > require './model'
@@ -246,8 +246,8 @@ Define routes to handle login, logout and a protected page.
   end
 
   get '/auth/logout' do
-    env['warden'].raw_session.inspect
-    env['warden'].logout
+    # env['warden'] = Warden::Proxy:3380 @config={:default_scope=>:default, :scope_defaults=>{:default=>{:action=>"auth/unauthenticated"}}, :default_strategies=>{:default=>[:password]}, :intercept_401=>true, :failure_app=>SinatraWardenExample}
+    env['warden'].logout # Logout everyone and clear the session
     flash[:success] = 'Successfully logged out'
     redirect '/'
   end
