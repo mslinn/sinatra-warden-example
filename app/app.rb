@@ -28,6 +28,10 @@ Warden::Strategies.add(:password) do
     return fail 'No password provided' if user['password'].empty?
 
     authenticated_user = User.first(username: user['username'])
+    # If the login was successful, the `Rack::Request::Env` module, exposed as `env`,
+    # will contain this key: env['rack.request.form_hash']['user'], with values:
+    # {"username"=>"admin", "password"=>"admin"}
+    # Access it from the Sinatra webapp as `env['warden'].user`
 
     return fail 'The username you entered does not exist.' if authenticated_user.nil?
 
@@ -71,10 +75,6 @@ class SinatraWardenExample < Sinatra::Base
     # we handle it only under "post '/auth/unauthenticated'", we need
     # to change the request method to POST
     env['REQUEST_METHOD'] = 'POST'
-    # ...and we need to do the following to work with Rack::MethodOverride
-    env.each do |key, _value|
-      env[key]['_method'] = 'post' if key == 'rack.request.form_hash'
-    end
   end
 
   get '/' do
