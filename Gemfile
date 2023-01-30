@@ -1,13 +1,15 @@
 source 'https://rubygems.org'
 
-gem 'data_mapper'
-gem 'dm-sqlite-adapter'
+gem 'bcrypt'
+gem 'rom', '=4.2.1'
+gem 'rom-sql'
+gem 'sqlite3'
 gem 'sinatra', '>=3.0.5'
 gem 'sinatra-flash'
 gem 'warden'
 
-gem 'debase', require: false
-gem 'rackup', require: false
+gem 'debase', '0.2.5.beta2', require: false
+gem 'rack', require: false
 gem 'ruby-debug-ide', require: false
 gem 'rubocop', require: false
 gem 'rubocop-rake', require: false
