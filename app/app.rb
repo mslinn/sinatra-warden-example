@@ -13,12 +13,12 @@ Warden::Strategies.add(:password) do
 
   # See https://github.com/wardencommunity/warden/wiki/Overview#failing-authentication
   def authenticate!
-    @user = params['user']
-    user_found = User.first(username: @user['username'])
+    user = params['user']
+    user_found = User.first(username: user['username'])
 
     if user_found.nil?
       throw(:warden, message: "The username you entered does not exist.")
-    elsif user_found.authenticate(@user['password'])
+    elsif user_found.authenticate(user['password'])
       success!(user_found)
     else
       throw(:warden, message: "Invalid username and password combination.")
