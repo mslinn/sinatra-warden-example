@@ -11,7 +11,6 @@ gem 'dm-transactions'
 gem 'dm-types'
 gem 'dm-validations'
 gem 'sinatra', '>=3.0.5'
-gem 'sinatra-advanced-routes', :require => 'sinatra/advanced_routes'
 gem 'sinatra-flash'
 gem 'warden'
 

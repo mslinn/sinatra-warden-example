@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require 'sinatra/flash'
-# require 'sinatra/advanced_routes'
 require 'warden'
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
@@ -26,9 +25,6 @@ Warden::Strategies.add(:password) do
 end
 
 class SinatraWardenExample < Sinatra::Base
-  # See https://github.com/rkh/sinatra-advanced-routes
-  #register Sinatra::AdvancedRoutes
-
   disable :show_errors
   disable :show_exceptions
 
