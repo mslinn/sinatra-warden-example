@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'bcrypt'
 gem 'data_mapper'
 gem 'dm-sqlite-adapter'
 gem 'sinatra', '>=3.0.5'

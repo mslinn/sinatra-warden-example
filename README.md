@@ -1,11 +1,14 @@
 # Sinatra Warden Example
 This article explains the basics of authentication and Rack middleware,
-and in the process, builds a complete webapp with [Sinatra](http://sinatrarb.com),
-[DataMapper](http://datamapper.org) and [Warden](http://github.com/hassox/warden).
+and in the process, builds a complete webapp with
+[Sinatra](http://sinatrarb.com),
+[DataMapper](http://datamapper.org), and
+[Warden](http://github.com/hassox/warden).
 
 
 ## Audience
 This article is intended for people familiar with Sinatra and DataMapper who want multiple user authentication.
+
 
 ## Storing Passwords
 Passwords should never be stored in plain text.
@@ -16,7 +19,7 @@ DataMapper supports a BCryptHash property type, which is great because
 [secure](http://codahale.com/how-to-safely-store-a-password/).
 
 If you'd like to see another take on using `bcrypt`,
-Github user **namelessjon** has a more complex example with some discussion
+Github user `namelessjon` has a more complex example with some discussion
 [here](https://gist.github.com/namelessjon/1039058).
 
 
@@ -37,7 +40,6 @@ Open up (or create) a file named `model.rb`, `require` the gems, and set up `Dat
 
 ###### /model.rb
 ~~~ruby
-require 'rubygems'
 require 'data_mapper'
 require 'dm-sqlite-adapter'
 require 'bcrypt'
